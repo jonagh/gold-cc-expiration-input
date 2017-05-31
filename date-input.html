@@ -22,29 +22,48 @@ subject to an additional IP rights grant found at http://polymer.github.io/PATEN
   <template>
     <style>
       span {
-        @apply(--paper-input-container-font);
+        @apply --paper-input-container-font;
         opacity: 0.33;
         text-align: center;
       }
 
-      input[is="iron-input"] {
+      .container {
+        @apply --layout-horizontal;
+      }
+
+      input {
+        @apply --layout-flex;
+      }
+
+      input {
         position: relative; /* to make a stacking context */
         outline: none;
         box-shadow: none;
         padding: 0;
         width: 100%;
+        max-width: 100%;
         background: transparent;
         border: none;
-        color: var(--paper-input-container-input-color, --primary-text-color);
+        color: var(--paper-input-container-input-color, var(--primary-text-color));
+        -webkit-appearance: none;
         text-align: center;
-
-        @apply(--layout-flex);
-        @apply(--paper-font-subhead);
-        @apply(--paper-input-container-input);
+        vertical-align: bottom;
+        /* Firefox sets a min-width on the input, which can cause layout issues */
+        min-width: 0;
+        @apply --paper-font-subhead;
+        @apply --paper-input-container-input;
       }
-
-      .container {
-        @apply(--layout-horizontal);
+      input::-webkit-input-placeholder {
+        color: var(--paper-input-container-color, var(--secondary-text-color));
+      }
+      input:-moz-placeholder {
+        color: var(--paper-input-container-color, var(--secondary-text-color));
+      }
+      input::-moz-placeholder {
+        color: var(--paper-input-container-color, var(--secondary-text-color));
+      }
+      input:-ms-input-placeholder {
+        color: var(--paper-input-container-color, var(--secondary-text-color));
       }
     </style>
 
@@ -54,38 +73,50 @@ subject to an additional IP rights grant found at http://polymer.github.io/PATEN
     <span aria-hidden id="yearLabel" hidden>Year</span>
 
     <div class="container">
-      <input is="iron-input"
-          id="expirationMonth"
-          aria-labelledby$="[[_computeAriaLabel(ariaLabelPrefix,'monthLabel')]]"
-          required$="[[required]]"
+      <iron-input
           maxlength="2"
           bind-value="{{month}}"
-          placeholder="MM"
           allowed-pattern="[0-9]"
-          prevent-invalid-input
-          autocomplete="cc-exp-month"
-          type="tel"
-          disabled$="[[disabled]]"
-          invalid="{{invalid}}"
-          autofocus$="[[autofocus]]"
-          inputmode$="[[inputmode]]"
-          readonly$="[[readonly]]">
+          auto-validate
+          invalid="{{invalid}}">
+          <input
+              aria-labelledby$="[[_computeAriaLabel(ariaLabelPrefix,'monthLabel')]]"
+              invalid$="{{invalid}}"
+              maxlength="2"
+              required$="[[required]]"
+              type="tel"
+              autocomplete="cc-exp-month"
+              prevent-invalid-input
+              disabled$="[[disabled]]"
+              autofocus$="[[autofocus]]"
+              inputmode$="[[inputmode]]"
+              readonly$="[[readonly]]"
+              placeholder="MM">
+          </input>
+      </iron-input>
       <span>/</span>
-      <input is="iron-input"
-          id="expirationYear"
-          aria-labelledby$="[[_computeAriaLabel(ariaLabelPrefix,'yearLabel')]]"
-          required$="[[required]]"
+      <iron-input
           maxlength="2"
           bind-value="{{year}}"
-          placeholder="YY"
           allowed-pattern="[0-9]"
-          prevent-invalid-input
-          autocomplete="cc-exp-year"
-          type="tel"
-          disabled$="[[disabled]]"
-          invalid="{{invalid}}"
-          inputmode$="[[inputmode]]"
-          readonly$="[[readonly]]">
+          auto-validate
+          invalid="{{invalid}}">
+          <input
+              id="expirationYearInput"
+              aria-labelledby$="[[_computeAriaLabel(ariaLabelPrefix,'yearLabel')]]"
+              invalid$="{{invalid}}"
+              maxlength="2"
+              required$="[[required]]"
+              type="tel"
+              autocomplete="cc-exp-year"
+              prevent-invalid-input
+              disabled$="[[disabled]]"
+              autofocus$="[[autofocus]]"
+              inputmode$="[[inputmode]]"
+              readonly$="[[readonly]]"
+              placeholder="YY">
+          </input>
+      </iron-input>
     </div>
   </template>
 
@@ -183,7 +214,7 @@ subject to an additional IP rights grant found at http://polymer.github.io/PATEN
     ],
 
     _selectYear: function() {
-      this.$.expirationYear.focus();
+      this.$.expirationYearInput.focus();
     },
 
     _computeDate: function(month, year) {

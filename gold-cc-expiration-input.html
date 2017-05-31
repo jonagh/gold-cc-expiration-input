@@ -60,15 +60,14 @@ style this element.
     </style>
 
     <paper-input-container id="container"
-        no-label-float="[[noLabelFloat]]"
-        always-float-label="[[alwaysFloatLabel]]"
+        always-float-label
         attr-for-value="date"
         disabled$="[[disabled]]"
         invalid="[[invalid]]">
 
-      <label hidden$="[[!label]]">[[label]]</label>
+      <label slot="label" hidden$="[[!label]]">[[label]]</label>
 
-      <date-input class="paper-input-input" id="input"
+      <date-input slot="input" class="paper-input-input" id="input"
           aria-label-prefix="[[_ariaLabelledBy]]"
           required$="[[required]]"
           autocomplete$="[[autocomplete]]"
@@ -81,7 +80,7 @@ style this element.
       </date-input>
 
       <template is="dom-if" if="[[errorMessage]]">
-        <paper-input-error>[[errorMessage]]</paper-input-error>
+        <paper-input-error slot="add-on">[[errorMessage]]</paper-input-error>
       </template>
 
     </paper-input-container>
@@ -117,6 +116,15 @@ style this element.
             type: String,
             value: '',
             observer: '_onValueChanged'
+          },
+
+          month: {
+            type: Number,
+            computed: '_computeMonthNum(value)'
+          },
+          year: {
+            type: Number,
+            computed: '_computeMonthNum(value)'
           }
         },
 
@@ -129,9 +137,12 @@ style this element.
         ],
 
         ready: function() {
-          // If there's an initial input, validate it.
-          if (this.value)
-            this._handleAutoValidate();
+          if (!this.value && Polymer.Element) {
+            this.value = '';
+          }
+          if (this.value && !Polymer.Element) {
+             this._handleAutoValidate();
+          }
         },
 
         /**
@@ -159,10 +170,16 @@ style this element.
           // Date is in MM/YY format.
           return value.split('/')[0];
         },
+        _computeMonthNum: function(value) {
+          return parseInt(this._computeMonth(value), 10) || NaN;
+        },
 
         _computeYear: function(value) {
           // Date is in MM/YY format.
           return value.split('/')[1] || '';
+        },
+        _computeYearNum: function(value) {
+          return parseInt(this._computeYear(value), 10) || NaN;
         },
 
         /**
@@ -180,7 +197,7 @@ style this element.
             this._handleAutoValidate();
           }
         }
-          
+
       })
 
     })();
