@@ -3,7 +3,8 @@
   "version": "2.0.0-hack",
   "description": "A validating input for a credit card expiration date",
   "authors": [
-    "The Polymer Authors"
+    "The Polymer Authors",
+    "jonagh"
   ],
   "keywords": [
     "web-components",
@@ -15,7 +16,7 @@
   "private": true,
   "repository": {
     "type": "git",
-    "url": "git://github.com/PolymerElements/gold-cc-expiration-input.git"
+    "url": "git://github.com/jonagh/gold-cc-expiration-input.git"
   },
   "license": "http://polymer.github.io/LICENSE.txt",
   "homepage": "https://github.com/PolymerElements/gold-cc-expiration-input",
